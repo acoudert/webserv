@@ -1,0 +1,24 @@
+workers 1;
+
+server {
+	listen	1234	;
+	root	 ./html	;
+	index	index.html	;
+	server_name	localhost	;
+	error_page	 404 405	 500	404.html;
+
+	location / {
+		methods		HEAD POST GET;
+		root	./html ; # je suis la root
+	  client_max_body_size	10000000;
+		index	index.html test.txt; # je suis la root
+		autoindex		 on;
+		cgi *.php ./php-cgi;
+		cgi *.sh /bin/sh;
+	}
+	location /php {
+		methods		HEAD POST GET;
+		root	./html/php; # je suis la root
+		autoindex		 on;
+	}
+}

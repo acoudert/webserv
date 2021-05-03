@@ -1,0 +1,57 @@
+workers 2;
+
+server {
+	listen	1234;
+	root	./html;
+	index	index.html;
+	server_name	localhost;
+	error_page 404 pythonTest/error/404.txt;
+
+	location / {
+		methods	GET HEAD PUT;
+		root	./html/pythonTest; # je suis la root
+		autoindex	 on;
+		cgi *.sh /bin/sh;
+		client_max_body_size 2000000;
+		save_dir ./html/pythonTest/putStuff;
+	}
+	location /cgi {
+		methods	POST GET HEAD;
+		root	./html/pythonTest/sh; # je suis la root
+		autoindex	 off;
+		index index.sh;
+		cgi *.sh /bin/sh;
+		client_max_body_size 500;
+	}
+	location /ipointtodir {
+		methods	POST GET;
+		root	./html/pythonTest/dir; # je suis la root
+		autoindex	 on;
+	}
+	location /cgiBis {
+		methods	POST;
+		root	./html/pythonTest/sh; # je suis la root
+		cgi *.sh /bin/sh;
+		client_max_body_size 1000000;
+	}
+	location /putStuff {
+		methods	GET;
+		root	./html/pythonTest/putStuff; # je suis la root
+		autoindex	off;
+		cgi *.sh /bin/sh;
+	}
+}
+
+server {
+	listen	10000;
+	root	 ./testFiles/html/pythonTest;
+	index	index.html;
+	server_name	localhost;
+	
+	location / {
+		methods	GET;
+		root	./html/pythonTest; # je suis la root
+		autoindex	 off;
+		index	index.html;
+	}
+}
